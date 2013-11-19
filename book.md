@@ -1,4 +1,4 @@
-个人新浪博客镜像
+分析网页内容与数据库操作
 ===========
 
 本章将通过一个实例来介绍如何编写一个爬虫程序来抓取网页内容，并存储到 MySQL 数据
@@ -54,7 +54,8 @@ request({
   url:    'http://cnodejs.org/',   // 请求的URL
   method: 'GET',                   // 请求方法
   headers: {                       // 指定请求头
-    'Accept-Language': 'zh-CN,zh;q=0.8'
+    'Accept-Language': 'zh-CN,zh;q=0.8',         // 指定 Accept-Language
+    'Cookie': '__utma=4454.11221.455353.21.143;' // 指定 Cookie
   }
 }, function (error, response, body) {
   if (!error && response.statusCode == 200) {
@@ -118,8 +119,9 @@ connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
 });
 ```
 
-具体的使用方法将在后面的实例中说明，有兴趣的读者也可以访问 mysql 模块的主页来获
-取详细使用说明：https://github.com/felixge/node-mysql
+大多数情况下我们只需要用 `query()` 方法执行指定的 SQL 查询语句即可。具体的使用方
+法将在后面的实例中说明，有兴趣的读者也可以访问 mysql 模块的主页来获取详细使用说
+明：https://github.com/felixge/node-mysql
 
 
 #### 使用 debug 模块来显示调试信息
