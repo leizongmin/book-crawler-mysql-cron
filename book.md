@@ -558,7 +558,7 @@ request('http://blog.sina.com.cn/s/articlelist_1776757314_0_1.html', function (e
     id: '69e72a4201015fqf' } ]
 ```
 
-上面的代码只能后去到一页的文章列表。如果该分类下有多页的话，我们需要在程序中检查
+上面的代码只能获取到一页的文章列表。如果该分类下有多页的话，我们需要在程序中检查
 是否有 **下一页** 的链接，如果有的话，自动读取下一页的文章列表，最后将结果一并返
 回：
 
@@ -1871,7 +1871,7 @@ child_process 模块的 `spawn()` 方法和 `exec()` 方法的区别主要有以
 
 前面已经介绍了如何使用 `child_process` 模块来其启动一个新的进程，在本实例中，要
 执行的是一个 Node.js 程序，我们可以通过 `process.execPath` 来取得当前 Node.js
-进程的可执行文件路径，在使用 `child_process.spawn()` 来执行该可执行文件，将要执
+进程的可执行文件路径，再使用 `child_process.spawn()` 来执行该可执行文件，将要执
 行的 Node.js 程序作为第一个参数，比如：
 
 ```JavaScript
@@ -1967,6 +1967,7 @@ job.start();
 
 + 《SQL注入》 http://baike.baidu.com/view/3896.htm
 + 《数据库连接池》 http://baike.baidu.com/view/84055.htm
++ 《crontab命令》 http://baike.baidu.com/view/1229061.htm
 + 《exec与spawn方法的区别与陷阱》 http://blog.csdn.net/bd_zengxinxin/article/details/9044989
 
 

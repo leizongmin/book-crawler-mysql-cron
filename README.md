@@ -10,8 +10,9 @@
 TODO
 =====
 
-MySQL 模块介绍中，增加 `UPDATE/DELETE` 和 `INSERT` 时，返回值 affectedRows 和
-insertId
+增加 async 模块介绍
+
+cron 模块介绍部分，增加简单的 cron 语法
 
 末尾增加扩展内容：  Event: 'uncaughtException'
 
