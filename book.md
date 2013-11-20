@@ -305,7 +305,7 @@ https://npmjs.org/package/debug
   "main":           "app.js",
   "version":        "0.0.1",
   "private":        true,
-  "description":    "简单的新浪博客反向代理程序",
+  "description":    "分析网页内容与数据库操作",
   "engines": {
     "node":         ">= 0.10.0"
   },
@@ -1494,7 +1494,7 @@ package.json 文件中：
   "main":           "app.js",
   "version":        "0.0.1",
   "private":        true,
-  "description":    "简单的新浪博客反向代理程序",
+  "description":    "分析网页内容与数据库操作",
   "engines": {
     "node":         ">= 0.10.0"
   },
@@ -1909,7 +1909,7 @@ http://nodejs.org/api/child_process.html
   "main":           "app.js",
   "version":        "0.0.1",
   "private":        true,
-  "description":    "简单的新浪博客反向代理程序",
+  "description":    "分析网页内容与数据库操作",
   "engines": {
     "node":         ">= 0.10.0"
   },
