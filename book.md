@@ -272,6 +272,18 @@ pool.getConnection(function(err, connection) {
 主页来获取详细使用说明：https://github.com/felixge/node-mysql
 
 
+#### 使用 async 模块来简化异步流程控制
+
+**async** 是一个使用比较广泛的 JavaScript 异步流程控制模块，除了可以在 Node.js
+上运行外，其还可以在浏览器端运行。 **async** 模块提供了约 20 多个实用的函数来
+帮助我们理清在使用 Node.js 过程中各种复杂回调。以下简单介绍其中一些常用的函数：
+
+
+
+关于 async 模块的详细使用方法可以访问该模块的主页来获取：
+https://npmjs.org/package/async
+
+
 #### 使用 debug 模块来显示调试信息
 
 在编写程序的时候，有时候我们需要输出输出一些调试信息，以便排查问题，当程序在生产
