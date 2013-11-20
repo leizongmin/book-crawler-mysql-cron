@@ -91,11 +91,14 @@ console.log($.html());
 需要注意的是，cheerio 并不支持所有 jQuery 的查询语法，比如 `$('a:first')` 会报错
 ，只能写成 `$('a').first()` ，在使用的时候需要注意。
 
+**cheerio** 模块的详细使用方法可以访问该模块的主要来获取：
+https://npmjs.org/package/cheerio
+
 
 #### 使用 mysql 模块来将数据储存到数据库
 
-mysql 是 Node.js 下比较有名的一个 MySQL 操作模块，在本实例中我们将通过此模块来将
-结果保存到数据库中。一下是一个简单的示例：
+**mysql** 是 Node.js 下比较有名的一个 MySQL 操作模块，在本实例中我们将通过此模块
+来将结果保存到数据库中。以下是一个简单的示例：
 
 ```JavaScript
 var mysql = require('mysql');
@@ -109,19 +112,164 @@ var connection = mysql.createConnection({
 connection.connect();
 
 // 执行查询
-connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+connection.query('SELECT 1 + 1 AS solution', function(err, rows) {
   if (err) throw err;
 
-  console.log('The solution is: ', rows[0].solution);
+  console.log('The solution is: ' + rows[0].solution);
 
   // 关闭连接
   connection.end();
 });
 ```
 
-大多数情况下我们只需要用 `query()` 方法执行指定的 SQL 查询语句即可。具体的使用方
-法将在后面的实例中说明，有兴趣的读者也可以访问 mysql 模块的主页来获取详细使用说
-明：https://github.com/felixge/node-mysql
+如果执行的是更新语句，比如 `UPDATE`、`DELETE`、`INSERT`，我们可以从回调函数的第
+二个参数中获取到对应的执行结果，比如：
+
+```JavaScript
+connection.query('UPDATE `table` SET `a`=1', function (err, info) {
+  if (err) throw err;
+
+  // UPDATE 和 DELETE 可以通过 info.affectedRows 来获取到受影响的行数
+  console.log('受影响的行数：' + info.affectedRows);
+});
+
+connection.query('INSERT INTO `table`(`a`) VALUES (1)', function (err, info) {
+  if (err) throw err;
+
+  // INSERT 可以通过 info.insertId 来获取到当前记录的自增 ID
+  console.log('ID：' + info.insertId);
+});
+```
+
+##### MySQL 服务器断开连接
+
+当遇到网络问题，或者 MySQL 服务器重启，或者因为超过一段时间没有操作时 MySQL 服务
+器会主动断开连接，这时候会触发一个 `error` 事件。为了保证程序能正常工作，我们需
+要监听这个事件，并重新连接数据库，以下是来自 mysql 模块使用手册中的例子：
+
+```JavaScript
+var db_config = {
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'example'
+};
+
+var connection;
+
+function handleDisconnect() {
+
+  // 当旧的连接不能再使用时，创建一个新的连接
+  connection = mysql.createConnection(db_config);
+  connection.connect(function(err) {
+    // 当连接成功或失败时，会调用此回调函数
+    // 如果 err 为非空，则说明连接失败，err 是对应的出错信息
+    if(err) {
+      console.log('连接到数据库时出错: ' + err);
+      // 为了避免死循环，需要等待一段时间后再重试
+      setTimeout(handleDisconnect, 2000);
+    }
+  });
+
+  connection.on('error', function(err) {
+    // 在使用过程中出错，会触发 error 事件
+    console.log('出错: ' + err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      // 如果是 “丢失连接” 错误，则重新连接
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+}
+
+handleDisconnect();
+```
+
+##### 字符串值的转义
+
+在使用客户端输入的值来组装 SQL 查询语句时，我们需要对这些值进行正确的转义，以避
+免遭受 SQL 注入攻击。我们可以使用 `escape()` 方法来对这些值进行转义：
+
+```JavaScript
+var userId = ' 这是用户输入的数据';
+var sql    = 'SELECT * FROM users WHERE id = ' + connection.escape(userId);
+connection.query(sql, function(err, results) {
+  // ...
+});
+```
+
+另外，还可以在 SQL 语句中将要转义的值用问号 `?`来代替，再在调用 `query()` 方法时
+传入这些待转义的值：
+
+```JavaScript
+// 第二个参数是一个数组，分别对应 SQL 语句中各个 ? 部分的值
+connection.query('SELECT * FROM users WHERE a = ? AND b = ?', [a, b], function(err, results) {
+  // ...
+});
+```
+
+
+##### 标识符的转义
+
+与字符串值的转义类似，标识符的转义可以使用 `escapeId()` 方法来实现：
+
+```JavaScript
+var sorter = 'date';
+var query = 'SELECT * FROM posts ORDER BY ' + mysql.escapeId(sorter);
+console.log(query); // SELECT * FROM posts ORDER BY `date`
+```
+
+```JavaScript
+var sorter = 'date';
+var query = 'SELECT * FROM posts ORDER BY ' + mysql.escapeId('posts.' + sorter);
+
+console.log(query); // SELECT * FROM posts ORDER BY `posts`.`date`
+```
+
+我们也可以在 SQL 语句中使用两个问号 `??` 来表示要转义的标识符：
+
+```JavaScript
+var userId = 1;
+var columns = ['username', 'email'];
+var query = connection.query('SELECT ?? FROM ?? WHERE id = ?', [columns, 'users', userId], function(err, results) {
+  // ...
+});
+
+console.log(query.sql); // SELECT `username`, `email` FROM `users` WHERE id = 1
+```
+
+
+##### 连接池
+
+在实际应用中，往往需要同时发起多个数据库查询，若仅有一个数据库连接，则只能把这些
+查询放到等待队列中，会一定程度上影响程序的运行效率。因此，我们需要一个连接池来管
+理多个数据库连接。
+
+**mysql** 模块内置了连接池机制，以下是一个简单的使用示例：
+
+```JavaScript
+var mysql = require('mysql');
+
+// 创建数据库连接池
+var pool  = mysql.createPool({
+  host:           'localhost', // 数据库地址
+  user:           'root',      // 数据库用户
+  password:        '',         // 对应的密码
+  database:        'example',  // 数据库名称
+  connectionLimit: 10          // 最大连接数，默认为10
+});
+
+// 在使用 SQL 查询前，需要调用 pool.getConnection() 来取得一个连接
+pool.getConnection(function(err, connection) {
+  if (err) throw err;
+
+  // connection 即为当前一个可用的数据库连接
+});
+```
+
+**mysql** 模块具体的使用方法将在后面的实例中说明，有兴趣的读者也可以访问该模块的
+主页来获取详细使用说明：https://github.com/felixge/node-mysql
 
 
 #### 使用 debug 模块来显示调试信息
@@ -142,7 +290,7 @@ debug('现在的时间是 %s', new Date());
 https://npmjs.org/package/debug
 
 
-### 创建网络爬虫前的工作
+### 创建网络爬虫前的准备工作
 
 在开始写程序前，我们需要做一些初始化工作，比如建立一个 package.json 文件，指定
 模块依赖关系，这样可以方便以后部署应用。
@@ -1817,6 +1965,8 @@ job.start();
 
 参考文章：
 
++ 《SQL注入》 http://baike.baidu.com/view/3896.htm
++ 《数据库连接池》 http://baike.baidu.com/view/84055.htm
 + 《exec与spawn方法的区别与陷阱》 http://blog.csdn.net/bd_zengxinxin/article/details/9044989
 
 
