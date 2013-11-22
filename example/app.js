@@ -56,3 +56,8 @@ var job = new cronJob(config.autoUpdate, function () {
   });
 });
 job.start();
+
+
+process.on('uncaughtException', function (err) {
+  console.error('uncaughtException: %s', err.stack);
+})
