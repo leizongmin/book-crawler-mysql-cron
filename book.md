@@ -282,10 +282,134 @@ pool.getConnection(function(err, connection) {
 上运行外，其还可以在浏览器端运行。 **async** 模块提供了约 20 多个实用的函数来
 帮助我们理清在使用 Node.js 过程中各种复杂回调。以下简单介绍其中一些常用的函数：
 
+##### 串行地执行一组函数
+
+可以使用 `async.series()` 来依次执行一组函数，其第一个参数是一个函数数组，每个函
+数接受一个参数作为其回调函数，在该函数执行完成时调用回调函数即可。
+`async.series()` 的第二个参数作为整一组函数执行完成后的回调函数。以下是其简单的
+使用示例：
+
+```JavaScript
+var async = require('async');
+
+async.series([
+  function (done) {
+    console.log(1);
+    done();
+  },
+  function (done) {
+    console.log(2);
+    done();
+  },
+  function (done) {
+    console.log(3);
+    done();
+  }
+], function (err) {
+  if (err) throw err;
+
+  console.log('完成');
+});
+```
+
+执行以上的程序，将会输出以下结果：
+
+```
+1
+2
+3
+完成
+```
+
+如果在执行某一个函数的过程中出错了，可以在执行回调函数 `done()` 的时候，将出错信
+息作为回调函数的第一个参数并执行，程序将会跳过函数数组中剩余的部分而直接执行最终
+的回调函数，比如：
+
+```JavaScript
+var async = require('async');
+
+async.series([
+  function (done) {
+    console.log(1);
+    done();
+  },
+  function (done) {
+    console.log(2);
+    done(new Error('error'));
+  },
+  function (done) {
+    console.log(3);
+    done();
+  }
+], function (err) {
+  if (err) throw err;
+
+  console.log('完成');
+});
+```
+
+执行以上的程序，可以看到在输出 `1` 和 `2` 之后，程序即抛出了一个异常信息并终止
+了。
+
+如果要并行的执行一组函数，我们只需要使用 `async.parallel()` 即可，其使用方法与
+`async.series()` 一样。
 
 
-关于 async 模块的详细使用方法可以访问该模块的主页来获取：
+##### 遍历数组，将数组中的每个元素作为参数执行异步任务
+
+如果要遍历一个数组，可能我们会这样写：
+
+```JavaScript
+var arr = [1, 2, 3, 4, 5];
+arr.forEach(function (item) {
+  console.log(item);
+});
+```
+
+假如 `forEach()` 的回调函数内部要执行的是一些异步操作，而我们又需要让这些遍历操
+作串行地执行，可以使用 `async.each()` 了实现：
+
+```JavaScript
+var async = require('async');
+
+var arr = [1, 2, 3, 4, 5];
+async.each(arr, function (item, done) {
+  
+  // 通过 setTimeout 来模拟一个异步任务
+  setTimeout(function () {
+    console.log(item);
+    done();
+  }, Math.random() * 1000);
+
+}, function (err) {
+  if (err) throw err;
+  
+  console.log('完成');
+});
+```
+
+运行以上程序，可能会输出以下结果：
+
+```
+4
+2
+3
+5
+1
+完成
+```
+
+其中数字部分的数序是随机的，再输出完这些 1 至 5 这几个数字后，最后输出“完成”。
+这是因为这些异步任务都是并行执行的，待所有任务都调用 `done()` 来返回后，才最终
+执行最终的回调函数。如果要让这些异步任务串行执行，可以使用 `async.eachSeries()`
+来实现。
+
+对应于数组的 `map`、`filter`、`reduce` 等方法， **async** 模块也提供了相应工具
+函数。关于 async 模块的详细使用方法可以访问该模块的主页来获取：
 https://npmjs.org/package/async
+
+另外，读者可以阅读本章末尾的“参考文献”部分的《Async详解》系列文章，其对 async
+模块进行了非常详细的讲解。
 
 
 #### 使用 debug 模块来显示调试信息
@@ -1976,6 +2100,16 @@ job.start();
 重新启动程序 `app.js` 即可自动运行更新任务。
 
 
+## 让程序更稳定地运行
+
+### 处理 uncaughtException 事件
+
+
+### 使用 pm2 来启动程序
+
+
+## 抓取 GBK 编码的网页
+
 
 --------------------------------------------------------------------------------
 
@@ -1983,6 +2117,9 @@ job.start();
 
 + 《SQL注入》：http://baike.baidu.com/view/3896.htm
 + 《数据库连接池》：http://baike.baidu.com/view/84055.htm
++ 《Async详解之一：流程控制》：http://freewind.me/blog/20120515/917.html
++ 《Async详解之二：工具类》：http://freewind.me/blog/20120517/931.html
++ 《Async详解之三：集合操作》：http://freewind.me/blog/20120518/932.html
 + 《crontab命令》：http://baike.baidu.com/view/1229061.htm
 + 《exec与spawn方法的区别与陷阱》：http://blog.csdn.net/bd_zengxinxin/article/details/9044989
 
