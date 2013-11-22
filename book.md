@@ -1,8 +1,12 @@
-分析网页内容与数据库操作
+网络爬虫与数据库操作
 ===========
 
-本章将通过一个实例来介绍如何编写一个爬虫程序来抓取网页内容，并存储到 MySQL 数据
-库中，以及定期执行爬虫来更新内容。
+## 简介
+
+本章将通过一个实例来介绍如何编写一个网络爬虫程序来抓取网页内容，并存储到 MySQL
+数据库中，以及定期执行爬虫来更新内容。通过本章内容的学习，读者将
+
+### 学习目标
 
 下面是本实例完成后的程序的截图：
 
@@ -317,7 +321,7 @@ https://npmjs.org/package/debug
   "main":           "app.js",
   "version":        "0.0.1",
   "private":        true,
-  "description":    "分析网页内容与数据库操作",
+  "description":    "网络爬虫与数据库操作",
   "engines": {
     "node":         ">= 0.10.0"
   },
@@ -1506,7 +1510,7 @@ package.json 文件中：
   "main":           "app.js",
   "version":        "0.0.1",
   "private":        true,
-  "description":    "分析网页内容与数据库操作",
+  "description":    "网络爬虫与数据库操作",
   "engines": {
     "node":         ">= 0.10.0"
   },
@@ -1921,7 +1925,7 @@ http://nodejs.org/api/child_process.html
   "main":           "app.js",
   "version":        "0.0.1",
   "private":        true,
-  "description":    "分析网页内容与数据库操作",
+  "description":    "网络爬虫与数据库操作",
   "engines": {
     "node":         ">= 0.10.0"
   },
@@ -1975,12 +1979,12 @@ job.start();
 
 --------------------------------------------------------------------------------
 
-参考文章：
+参考文献：
 
-+ 《SQL注入》 http://baike.baidu.com/view/3896.htm
-+ 《数据库连接池》 http://baike.baidu.com/view/84055.htm
-+ 《crontab命令》 http://baike.baidu.com/view/1229061.htm
-+ 《exec与spawn方法的区别与陷阱》 http://blog.csdn.net/bd_zengxinxin/article/details/9044989
++ 《SQL注入》：http://baike.baidu.com/view/3896.htm
++ 《数据库连接池》：http://baike.baidu.com/view/84055.htm
++ 《crontab命令》：http://baike.baidu.com/view/1229061.htm
++ 《exec与spawn方法的区别与陷阱》：http://blog.csdn.net/bd_zengxinxin/article/details/9044989
 
 
 [1]: images/1.png
