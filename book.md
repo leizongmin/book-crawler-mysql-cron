@@ -2159,9 +2159,74 @@ pm2 是一个功能强大的进程管理器，通过 `pm2 start` 来启动 Node.
 https://npmjs.org/package/pm2
 
 
-## 抓取 GBK 编码的网页
+## 处理 GBK 编码的网页
 
+由于历史原因，国内有些网站还在使用 GBK 字符编码显示（比如淘宝网），而 JavaScript
+内部的字符编码是使用 Unicode 来表示的，因此在编写爬虫来处理这些 GBK 编码的网页内
+容时还需要将这些内容转成 UTF-8 编码。
 
+比如运行下面的程序来抓取一个 GBK 编码的网页：
+
+```JavaScript
+var request = require('request');
+var cheerio = require('cheerio');
+
+request('http://www.taobao.com/', function (err, res, body) {
+  if (err) throw err;
+
+  var $ = cheerio.load(body);
+
+  // 输出网页的标题
+  console.log($('head title').text());
+});
+```
+
+执行以上程序，输出的内容是空白的，因为 Node.js 把 GBK 编码的网页内容当作 Unicode
+编码来处理了。下面将演示如何正确处理这些内容：
+
+首先在命令行下执行 `npm install iconv-lite` 来安装该模块，再运行以下程序：
+
+```JavaScript
+var request = require('request');
+var cheerio = require('cheerio');
+var iconv = require('iconv-lite');
+
+request({
+  url: 'http://www.taobao.com/',
+  // 设置 request 抓取网页时不要对接收到的数据做任何转换
+  encoding: null
+}, function (err, res, body) {
+  if (err) throw err;
+
+  // 转换 gbk 编码的网页内容
+  body = iconv.decode(body, 'gbk');
+
+  var $ = cheerio.load(body);
+
+  // 输出网页的标题
+  console.log($('head title').text());
+});
+```
+
+执行以上程序后，将会看到程序正确地打印出了网页的标题“ **淘宝网 - 淘！我喜欢** ”。
+
+另外，我们还可以使用一个叫 **gbk** 模块来实现相同的效果：
+
+首先在命令行下执行 `npm install gbk` 来安装该模块，再运行以下程序：
+
+```JavaScript
+var cheerio = require('cheerio');
+var gbk = require('gbk');
+
+gbk.fetch('http://www.taobao.com/','utf-8').to('string', function (err, body) {
+  if (err) throw err;
+
+  var $ = cheerio.load(body);
+
+  // 输出网页标题
+  console.log($('head title').text());
+});
+```
 
 
 --------------------------------------------------------------------------------
@@ -2176,6 +2241,8 @@ https://npmjs.org/package/pm2
 + 《segment fault 段异常各种原因》：http://www.myexception.cn/program/972764.html
 + 《crontab命令》：http://baike.baidu.com/view/1229061.htm
 + 《exec与spawn方法的区别与陷阱》：http://blog.csdn.net/bd_zengxinxin/article/details/9044989
++ 《UNICODE,GBK,UTF-8区别》：http://www.cnblogs.com/cy163/archive/2007/05/31/766886.html
++ 《NodeJS笔记：处理非utf8编码（续）》：http://nodejs.lofter.com/post/3c14e_48aee
 
 
 [1]: images/1.png
