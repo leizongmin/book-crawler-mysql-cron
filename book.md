@@ -874,8 +874,9 @@ request('http://blog.sina.com.cn/s/blog_69e72a420101gvec.html', function (err, r
 
 ### 获取文章分类下的所有文章
 
-要想获取到文章分类下的所有文章的内容，我们需要借助 **async** 模块来简化异步流程
-控制。
+前面的例子中我们已经知道了如何读取一个分类下的所有文章列表，以及获取指定文章的
+详细内容。要想获取到文章分类下的所有文章的内容，我们需要借助 **async** 模块来
+简化异步流程控制。
 
 新建文件 `article_all.js` ，保存到应用根目录下的 update 目录里面，程序如下：
 
@@ -1591,9 +1592,8 @@ web 服务器，以及通过 ejs 模板来渲染这些数据。
 
 #### 使用 express 模块来创建一个 web 服务器
 
-**express** 是一个简洁而灵活的 Node.js Web应用框架, 提供一系列强大特性帮助你创建
-各种Web应用。其丰富的HTTP工具以及来自Connect框架的中间件随取随用，创建强健、友好
-的API变得快速又简单。
+**express** 是一个简洁而灵活的 Node.js Web 应用框架，提供一系列强大特性帮助你
+创建各种基于 Web 应用。
 
 以下是一个 express 模块的使用示例：
 
@@ -2026,7 +2026,8 @@ child_process 模块的 `spawn()` 方法和 `exec()` 方法的区别主要有以
 + `spawn()` 执行的命令必须是一个实际存在的可执行文件，而 `exec()` 执行的命令则与
   在命令行下执行的命令一样；
 + `exec()` 可以在回调函数中一次性返回子进程在 **stdout** 和 **stderr** 中输出的
-  内容，但调用两者都会返回一个 **ChildProcess** 实例；
+  内容，但调用两者都会返回一个 **ChildProcess** 实例，通过监听其 stdout 和
+  stderr 属性的 `data` 事件均可获取到进程的输出；
 + 使用 `exec()` 启动子进程时，可以指定 **maxBuffer** 参数，默认为 200K，如果子进
   程的输出大于这个值，将会抛出 **Error: stdout maxBuffer exceeded** 异常，并结束
   该子进程。
@@ -2127,7 +2128,7 @@ job.start();
 ### 处理 uncaughtException 事件
 
 大多数情况下，异步 IO 操作（如读写本地文件，网络连接等）所发生的错误是无法被
-`try {} catch (err) {}` 所捕捉到的，如果其所抛出的异常没有被捕捉到，将会导致
+`try {} catch (err) {}` 捕捉到的。如果其所抛出的异常没有被捕捉到，将会导致
 Node.js 进程直接退出。而本实例恰恰需要大量地操作网络连接。
 
 在 Node.js 中，如果一个抛出的异常没有被 `try {} catch (err) {}` 捕捉到，其会尝试
@@ -2142,6 +2143,9 @@ process.on('uncaughtException', function (err) {
   console.error('uncaughtException: %s', err.stack);
 });
 ```
+
+关于 `uncaughtException` 事件的详细说明，请参考 Node.js 的 API 文档：
+http://nodejs.org/api/process.html#process_event_uncaughtexception
 
 
 ### 使用 pm2 来启动程序
@@ -2194,7 +2198,8 @@ request('http://www.taobao.com/', function (err, res, body) {
 执行以上程序，输出的内容是空白的，因为 Node.js 把 GBK 编码的网页内容当作 Unicode
 编码来处理了。下面将演示如何正确处理这些内容：
 
-首先在命令行下执行 `npm install iconv-lite` 来安装该模块，再运行以下程序：
+首先在命令行下执行 `npm install iconv-lite` 来安装 **iconv-lite** 模块，再运行
+以下程序：
 
 ```JavaScript
 var request = require('request');
@@ -2203,7 +2208,7 @@ var iconv = require('iconv-lite');
 
 request({
   url: 'http://www.taobao.com/',
-  // 设置 request 抓取网页时不要对接收到的数据做任何转换
+  // 重点，设置 request 抓取网页时不要对接收到的数据做任何转换
   encoding: null
 }, function (err, res, body) {
   if (err) throw err;
@@ -2245,6 +2250,8 @@ gbk.fetch('http://www.taobao.com/','utf-8').to('string', function (err, body) {
 自行访问该模块的主页来获取。要获取本章实例的完整代码可以访问以下网址获得：
 https://github.com/leizongmin/book-crawler-mysql-cron
 
+读者在阅读本章内容时遇到相关的问题，可以通过以下网址来提交：
+https://github.com/leizongmin/book-crawler-mysql-cron/issues
 
 --------------------------------------------------------------------------------
 
@@ -2255,6 +2262,7 @@ https://github.com/leizongmin/book-crawler-mysql-cron
 + 《Async详解之一：流程控制》：http://freewind.me/blog/20120515/917.html
 + 《Async详解之二：工具类》：http://freewind.me/blog/20120517/931.html
 + 《Async详解之三：集合操作》：http://freewind.me/blog/20120518/932.html
++ 《XSS注入和防范》：http://qdemo.sinaapp.com/ppt/xss/
 + 《segment fault 段异常各种原因》：http://www.myexception.cn/program/972764.html
 + 《crontab命令》：http://baike.baidu.com/view/1229061.htm
 + 《exec与spawn方法的区别与陷阱》：http://blog.csdn.net/bd_zengxinxin/article/details/9044989
