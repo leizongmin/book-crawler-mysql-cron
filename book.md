@@ -34,7 +34,7 @@
 
 网络爬虫是一种自动获取网页内容的程序。在本实例中，我们需要通过一个爬虫程序来抓取
 到源网页的内容，并从中提取出需要的数据。在此过程中，会涉及到如何获取到网页的内容
-，如何从网页中获取所需要的数据，以及如何将数据储存到数据库中，由于网络 I/O 操作
+、如何从网页中获取所需要的数据、以及如何将数据储存到数据库中。由于网络 I/O 操作
 大都是异步的，因此还会提到如何进行简单异步流程控制。
 
 
@@ -156,9 +156,9 @@ connection.query('INSERT INTO `table`(`a`) VALUES (1)', function (err, info) {
 
 ##### MySQL 服务器断开连接
 
-当遇到网络问题，或者 MySQL 服务器重启，或者因为超过一段时间没有操作时 MySQL 服务
-器会主动断开连接，这时候会触发一个 `error` 事件。为了保证程序能正常工作，我们需
-要监听这个事件，并重新连接数据库，以下是来自 mysql 模块使用手册中的例子：
+当遇到网络问题，或者 MySQL 服务器重启，或者因为超过一段时间没有操作时，MySQL
+服务器会主动断开连接，这时候会触发一个 `error` 事件。为了保证程序能正常工作，我
+们需要监听这个事件，并重新连接数据库。以下是来自 mysql 模块使用手册中的例子：
 
 ```JavaScript
 var db_config = {
@@ -206,7 +206,7 @@ handleDisconnect();
 
 ```JavaScript
 var userId = ' 这是用户输入的数据';
-var sql    = 'SELECT * FROM users WHERE id = ' + connection.escape(userId);
+var sql = 'SELECT * FROM users WHERE id = ' + connection.escape(userId);
 connection.query(sql, function(err, results) {
   // ...
 });
@@ -375,15 +375,15 @@ arr.forEach(function (item) {
 });
 ```
 
-假如 `forEach()` 的回调函数内部要执行的是一些异步操作，而我们又需要让这些遍历操
-作串行地执行，可以使用 `async.each()` 了实现：
+假如 `forEach()` 的回调函数内部要执行的是一些异步操作，而我们又需要等待遍历操作
+完成后再执行其他的操作，可以使用 `async.each()` 了实现：
 
 ```JavaScript
 var async = require('async');
 
 var arr = [1, 2, 3, 4, 5];
 async.each(arr, function (item, done) {
-  
+
   // 通过 setTimeout 来模拟一个异步任务
   setTimeout(function () {
     console.log(item);
@@ -392,7 +392,7 @@ async.each(arr, function (item, done) {
 
 }, function (err) {
   if (err) throw err;
-  
+
   console.log('完成');
 });
 ```
@@ -423,7 +423,7 @@ https://npmjs.org/package/async
 
 #### 使用 debug 模块来显示调试信息
 
-在编写程序的时候，有时候我们需要输出输出一些调试信息，以便排查问题，当程序在生产
+在编写程序的时候，有时候我们需要输出一些调试信息，以便排查问题。当程序在生产
 环境中运行的时候，我们又不需要输出这些调试信息。为了方便切换而不需要改动原来的程
 序，我们可以使用 debug 模块，在启动程序的时候按照说明来设置一下 **debug** 环境变
 量即可。以下是其简单的使用方法：
