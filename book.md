@@ -878,6 +878,9 @@ request('http://blog.sina.com.cn/s/blog_69e72a420101gvec.html', function (err, r
 详细内容。要想获取到文章分类下的所有文章的内容，我们需要借助 **async** 模块来
 简化异步流程控制。
 
+注：以下源码中采用了 **jsdoc** 的代码注释风格，关于该注释风格的详细说明请访问
+以下网址来获取：https://code.google.com/p/jsdoc-toolkit/wiki/TagReference
+
 新建文件 `article_all.js` ，保存到应用根目录下的 update 目录里面，程序如下：
 
 ```JavaScript
@@ -2262,6 +2265,7 @@ https://github.com/leizongmin/book-crawler-mysql-cron/issues
 + 《Async详解之一：流程控制》：http://freewind.me/blog/20120515/917.html
 + 《Async详解之二：工具类》：http://freewind.me/blog/20120517/931.html
 + 《Async详解之三：集合操作》：http://freewind.me/blog/20120518/932.html
++ 《jsdoc-toolkit TagReference》：https://code.google.com/p/jsdoc-toolkit/wiki/TagReference
 + 《XSS注入和防范》：http://qdemo.sinaapp.com/ppt/xss/
 + 《segment fault 段异常各种原因》：http://www.myexception.cn/program/972764.html
 + 《crontab命令》：http://baike.baidu.com/view/1229061.htm
