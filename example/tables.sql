@@ -10,8 +10,8 @@
 
 CREATE TABLE IF NOT EXISTS `article_detail` (
   `id` varchar(20) NOT NULL,
-  `tags` varchar(255) NOT NULL,
-  `content` text NOT NULL,
+  `tags` text NOT NULL,
+  `content` longtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `article_detail` (
 CREATE TABLE IF NOT EXISTS `article_list` (
   `id` varchar(20) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `url` varchar(255) NOT NULL,
+  `url` text NOT NULL,
   `class_id` int(11) NOT NULL,
   `created_time` int(11) NOT NULL,
   PRIMARY KEY (`id`,`class_id`),
