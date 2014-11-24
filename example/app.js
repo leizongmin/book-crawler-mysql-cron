@@ -8,12 +8,10 @@ var config = require('./config');
 var app = express();
 
 // 配置 express
-app.configure(function () {
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(app.router);
-  app.use('/public', express.static(path.join(__dirname, 'public')));
-});
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 
 // 网站首页
 app.get('/', function(req, res, next){
