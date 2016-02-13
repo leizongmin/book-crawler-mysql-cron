@@ -376,7 +376,7 @@ arr.forEach(function (item) {
 ```
 
 假如 `forEach()` 的回调函数内部要执行的是一些异步操作，而我们又需要等待遍历操作
-完成后再执行其他的操作，可以使用 `async.each()` 了实现：
+完成后再执行其他的操作，可以使用 `async.each()` 来实现：
 
 ```JavaScript
 var async = require('async');
