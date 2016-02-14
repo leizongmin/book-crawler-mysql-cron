@@ -1878,7 +1878,7 @@ app.get('/article/:id', function (req, res, next) {
 });
 ```
 
-新建文件 `index.ejs` ，保存到应用根目录下的 views 目录里面，程序如下：
+新建文件 `article.ejs` ，保存到应用根目录下的 views 目录里面，程序如下：
 
 ```HTML
 <div style="max-width:600px; margin:auto;">
